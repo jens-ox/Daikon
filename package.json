@@ -16,6 +16,9 @@
     "xss": "1.0.14"
   },
   "devDependencies": {
+    "@types/node": "^20.9.4",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "esbuild": "*",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^9.0.0",
@@ -23,12 +26,14 @@
     "eslint-plugin-prettier": "^5.0.1",
     "icu4c-data": "^0.57.2",
     "mocha": "*",
-    "prettier": "^3.1.0"
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2",
+    "vitest": "^0.34.6"
   },
   "scripts": {
     "lint": "eslint .",
     "test": "NODE_ICU_DATA=./node_modules/icu4c-data/ && mocha --timeout 0 tests",
-    "test-dev": "NODE_ICU_DATA=./node_modules/icu4c-data/ && mocha --timeout 0 tests/driver-jpeg-2000.js",
+    "test-dev": "NODE_ICU_DATA=./node_modules/icu4c-data/ && vitest",
     "build": "rm -rf build; mkdir build; esbuild src/main.js --bundle --global-name=daikon --platform=node --outfile=build/daikon.js; esbuild src/main.js --bundle --global-name=daikon --platform=node --minify --outfile=build/daikon-min.js",
     "release": "rm release/current/*.js; cp build/*.js release/current/.",
     "doc": "rm -rf build; mkdir build; ./node_modules/.bin/jsdoc2md src/*.js > build/docs.md"

@@ -2,23 +2,26 @@
 export const MAX_VALUE = 9007199254740991
 export const MIN_VALUE = -9007199254740991
 
-export const dec2hex = (i) => (i + 0x10000).toString(16).substr(-4).toUpperCase()
+export const dec2hex = (i: number) => (i + 0x10000).toString(16).substring(-4).toUpperCase()
 
-// http://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript
-// TODO: clean this mess up
-export const createArray = function (length) {
-  const arr = new Array(length || 0)
-  let i = length
+type NestedArray<T> = Array<T | NestedArray<T>>
 
-  if (arguments.length > 1) {
-    const args = Array.prototype.slice.call(arguments, 1)
-    while (i--) arr[length - 1 - i] = createArray.apply(this, args)
+// https://stackoverflow.com/a/12588826
+export const createArray = (...dimensions: number[]): NestedArray<number> => {
+  if (dimensions.length > 1) {
+    const dim = dimensions[0]
+    const rest = dimensions.slice(1)
+    const newArray = []
+    for (let i = 0; i < dim; i++) {
+      newArray[i] = createArray(...rest)
+    }
+    return newArray
+  } else {
+    return Array(dimensions[0]).fill(undefined)
   }
-
-  return arr
 }
 
-export const getStringAt = (dataview, start, length) => {
+export const getStringAt = (dataview: DataView, start: number, length: number) => {
   let str = ''
 
   for (let ctr = 0; ctr < length; ctr += 1) {
@@ -32,11 +35,11 @@ export const getStringAt = (dataview, start, length) => {
   return str
 }
 
-export const trim = (str) => str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+export const trim = (str: string) => str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 
-export const stripLeadingZeros = (str) => str.replace(/^[0]+/g, '')
+export const stripLeadingZeros = (str: string) => str.replace(/^[0]+/g, '')
 
-export const safeParseInt = (str) => {
+export const safeParseInt = (str: string) => {
   str = stripLeadingZeros(str)
   if (str.length > 0) {
     return parseInt(str, 10)
@@ -45,12 +48,12 @@ export const safeParseInt = (str) => {
   return 0
 }
 
-export const convertCamcelCaseToTitleCase = (str) => {
+export const convertCamcelCaseToTitleCase = (str: string) => {
   const result = str.replace(/([A-Z][a-z])/g, ' $1')
   return trim(result.charAt(0).toUpperCase() + result.slice(1))
 }
 
-export const safeParseFloat = function (str) {
+export const safeParseFloat = function (str: string) {
   str = stripLeadingZeros(str)
   if (str.length > 0) {
     return parseFloat(str)
@@ -60,7 +63,7 @@ export const safeParseFloat = function (str) {
 }
 
 // http://stackoverflow.com/questions/8361086/convert-byte-array-to-numbers-in-javascript
-export const bytesToDouble = function (data) {
+export const bytesToDouble = function (data: number[]) {
   const sign = (data[0] & (1 << 7)) >> 7
 
   const exponent = ((data[0] & 127) << 4) | ((data[1] & (15 << 4)) >> 4)
@@ -82,14 +85,14 @@ export const bytesToDouble = function (data) {
   return Math.pow(-1, sign) * mantissa * mul
 }
 
-export const concatArrayBuffers = function (buffer1, buffer2) {
+export const concatArrayBuffers = function (buffer1: Buffer, buffer2: Buffer) {
   const tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength)
   tmp.set(new Uint8Array(buffer1), 0)
   tmp.set(new Uint8Array(buffer2), buffer1.byteLength)
   return tmp.buffer
 }
 
-export const concatArrayBuffers2 = function (buffers) {
+export const concatArrayBuffers2 = function (buffers: Buffer[]) {
   let length = 0
   let offset = 0
 
@@ -107,7 +110,7 @@ export const concatArrayBuffers2 = function (buffers) {
   return tmp.buffer
 }
 
-export const fillBuffer = function (array, buffer, offset, numBytes) {
+export const fillBuffer = function (array: number[], buffer: DataView, offset: number, numBytes: number) {
   if (numBytes === 1) {
     for (let ctr = 0; ctr < array.length; ctr += 1) {
       buffer.setUint8(offset + ctr, array[ctr])
@@ -119,15 +122,15 @@ export const fillBuffer = function (array, buffer, offset, numBytes) {
   }
 }
 
-export const fillBufferRGB = function (array, buffer, offset) {
-  const numElements = parseInt(array.length / 3)
+export const fillBufferRGB = function (array: number[], buffer: DataView, offset: number) {
+  const numElements = Math.round(array.length / 3)
 
   for (let ctr = 0; ctr < numElements; ctr += 1) {
     const r = array[ctr * 3]
     const g = array[ctr * 3 + 1]
     const b = array[ctr * 3 + 2]
 
-    buffer.setUint8(offset + ctr, parseInt((r + b + g) / 3), true)
+    buffer.setUint8(offset + ctr, Math.round((r + b + g) / 3))
   }
 }
 
@@ -154,15 +157,6 @@ export const bind = function (scope, fn, args, appendArgs) {
 
     return method.apply(scope || window, callArgs)
   }
-}
-
-export const toArrayBuffer = function (buffer) {
-  const ab = new ArrayBuffer(buffer.length)
-  const view = new Uint8Array(ab)
-  for (let i = 0; i < buffer.length; i += 1) {
-    view[i] = buffer[i]
-  }
-  return ab
 }
 
 // http://stackoverflow.com/questions/203739/why-does-instanceof-return-false-for-some-literals

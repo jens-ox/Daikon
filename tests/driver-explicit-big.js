@@ -3,7 +3,7 @@ import fs from 'fs'
 import * as daikon from '../src/main.js'
 
 const buf = fs.readFileSync('./tests/data/explicit_big.dcm')
-const data = new DataView(daikon.Utils.toArrayBuffer(buf))
+const data = new DataView(buf)
 let dataInterpreted = null
 let image = null
 

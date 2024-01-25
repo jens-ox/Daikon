@@ -9,7 +9,7 @@ let imageData = null
 for (const file of files) {
   const filePath = './tests/data/volume/' + file
   const buf = fs.readFileSync(filePath)
-  const image = daikon.Series.parseImage(new DataView(daikon.Utils.toArrayBuffer(buf)))
+  const image = daikon.Series.parseImage(new DataView(buf))
 
   if (image === null) {
     console.error(daikon.Series.parserError)

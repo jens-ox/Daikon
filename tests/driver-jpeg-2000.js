@@ -3,7 +3,7 @@ import fs from 'fs'
 import * as daikon from '../src/main.js'
 
 const buf = fs.readFileSync('./tests/data/jpeg_2000.dcm')
-const data = new DataView(daikon.Utils.toArrayBuffer(buf))
+const data = new DataView(buf)
 const image = daikon.Series.parseImage(data)
 
 describe('Daikon', function () {

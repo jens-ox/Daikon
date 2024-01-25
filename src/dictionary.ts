@@ -3613,16 +3613,18 @@ export const dict = {
 
 /**
  * Returns the VR for the specified group and element.
- * @param {number} group
- * @param {number} element
- * @returns {string}
  */
-export const getVR = (group, element) => {
-  let vr, elementData, groupData
+export const getVR = (group: number, element: number): string => {
+  let groupData, elementData, vr
 
-  groupData = dict[dec2hex(group)]
+  const groupKey = dec2hex(group) as keyof typeof dict
+  const privateGroupKey = dec2hex(group) as keyof typeof dictPrivate
+
+   groupData = dict[groupKey]
+  const elementKey = dec2hex(element) as keyof typeof groupData
+
   if (groupData) {
-    elementData = groupData[dec2hex(element)]
+    elementData = groupData[elementKey]
     if (elementData) {
       vr = elementData[0]
     } else if (element === 0) {
@@ -3631,9 +3633,9 @@ export const getVR = (group, element) => {
   }
 
   if (!vr) {
-    groupData = dictPrivate[dec2hex(group)]
+    groupData = dictPrivate[privateGroupKey]
     if (groupData) {
-      elementData = groupData[dec2hex(element)]
+      elementData = groupData[elementKey]
       if (elementData) {
         vr = elementData[0]
       }
@@ -3649,16 +3651,18 @@ export const getVR = (group, element) => {
 
 /**
  * Returns the description for the specified group and element.
- * @param {number} group
- * @param {number} element
- * @returns {string}
  */
-export const getDescription = (group, element) => {
-  let des, elementData, groupData
+export const getDescription = (group: number, element: number): string => {
+  let groupData, elementData, des
 
-  groupData = dict[dec2hex(group)]
+  const groupKey = dec2hex(group) as keyof typeof dict
+  const privateGroupKey = dec2hex(group) as keyof typeof dictPrivate
+
+   groupData = dict[groupKey]
+  const elementKey = dec2hex(element) as keyof typeof groupData
+
   if (groupData) {
-    elementData = groupData[dec2hex(element)]
+    elementData = groupData[elementKey]
     if (elementData) {
       des = elementData[1]
     } else if (element === 0) {
@@ -3667,9 +3671,9 @@ export const getDescription = (group, element) => {
   }
 
   if (!des) {
-    groupData = dictPrivate[dec2hex(group)]
+    groupData = dictPrivate[privateGroupKey]
     if (groupData) {
-      elementData = groupData[dec2hex(element)]
+      elementData = groupData[elementKey]
       if (elementData) {
         des = elementData[1]
       }

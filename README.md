@@ -55,7 +55,7 @@ for (let ctr in files) {
     var buf = fs.readFileSync(name);
     
     // parse DICOM file
-    var image = daikon.Series.parseImage(new DataView(toArrayBuffer(buf)));
+    var image = daikon.Series.parseImage(new DataView(buf));
 
     if (image === null) {
         console.error(daikon.Series.parserError);

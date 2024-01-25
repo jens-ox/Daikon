@@ -2,7 +2,7 @@
 export const JPEG_MAGIC_NUMBER = [0xff, 0xd8]
 export const JPEG2000_MAGIC_NUMBER = [0xff, 0x4f, 0xff, 0x51]
 
-export const isHeaderJPEG = (data) => {
+export const isHeaderJPEG = (data: DataView) => {
   if (data) {
     if (data.getUint8(0) !== JPEG_MAGIC_NUMBER[0]) {
       return false
@@ -18,7 +18,7 @@ export const isHeaderJPEG = (data) => {
   return false
 }
 
-export const isHeaderJPEG2000 = (data) => {
+export const isHeaderJPEG2000 = (data: DataView) => {
   if (data) {
     for (let ctr = 0; ctr < JPEG2000_MAGIC_NUMBER.length; ctr += 1) {
       if (data.getUint8(ctr) !== JPEG2000_MAGIC_NUMBER[ctr]) {
